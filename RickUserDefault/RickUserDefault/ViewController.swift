@@ -14,7 +14,6 @@ class ViewController: UIViewController {
     let image = UIImageView()
     let networkManager = NetworkManager()
 
-
     var characters = [Character]()
 
     override func viewDidLoad() {
@@ -24,11 +23,11 @@ class ViewController: UIViewController {
 
         networkManager.getCharacters { [weak self] characters in
 
-
             if let savedData = UserDefaults.standard.data(forKey: "characters") {
                 do {
                     let savedCharacters = try JSONDecoder().decode([Character].self, from: savedData)
                     self?.characters = savedCharacters
+                    self?.characters = characters
                     print("Characters loaded from UserDefaults")
                 } catch {
                     print("Error loaded characters from UserDefaults: ", error.localizedDescription)
@@ -56,8 +55,6 @@ class ViewController: UIViewController {
         }
 
     }
-
-
 }
 
 extension ViewController: UITableViewDataSource {
@@ -65,9 +62,14 @@ extension ViewController: UITableViewDataSource {
         return characters.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustomTableViewCell else { return UITableViewCell() }
-
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "cell",
+            for: indexPath
+        ) as? CustomTableViewCell else { return UITableViewCell() }
 
         let character = characters[indexPath.row]
 
@@ -89,6 +91,4 @@ extension ViewController: UITableViewDataSource {
         }
         return cell
     }
-
 }
-
